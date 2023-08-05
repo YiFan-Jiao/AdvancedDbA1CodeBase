@@ -44,6 +44,8 @@ namespace WebApplication2.Models
         public Guid BrandId { get; set; }
         
         public Brand Brand { get; set; }
+
+        public ICollection<StoreLaptop> StoreLaptops { get; set; } = new HashSet<StoreLaptop>();
     }
 
     public enum LaptopCondition

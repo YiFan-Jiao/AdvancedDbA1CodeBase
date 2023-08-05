@@ -12,7 +12,7 @@ namespace WebApplication2.Data
 
             db.Database.EnsureDeleted();
             db.Database.Migrate();
-
+            
             // Add brands
             Brand brandOne = new Brand { Name = "Apple" };
             Brand brandTwo = new Brand { Name = "Lenovo" };
@@ -59,7 +59,7 @@ namespace WebApplication2.Data
                 db.Add(laptopThree);
                 db.SaveChanges();
             }
-
+            
             // Add stores
             Store store1 = new Store { StreetName = "Main Street", StreetNumber = "123", Province = "ON" };
             Store store2 = new Store { StreetName = "First Avenue", StreetNumber = "456", Province = "BC" };
@@ -73,6 +73,38 @@ namespace WebApplication2.Data
                 db.SaveChanges();
             }
 
+            //add StoreLaptops
+            StoreLaptop storeLaptop = new StoreLaptop
+            {
+                StoreId = store1.Id,
+                LaptopId = laptopThree.Id
+            };
+            StoreLaptop storeLaptop2 = new StoreLaptop
+            {
+                StoreId = store1.Id,
+                LaptopId = laptopOne.Id
+            };
+            StoreLaptop storeLaptop3 = new StoreLaptop
+            {
+                StoreId = store2.Id,
+                LaptopId = laptopOne.Id
+            };
+            StoreLaptop storeLaptop4 = new StoreLaptop
+            {
+                StoreId = store3.Id,
+                LaptopId = laptopTwo.Id
+            };
+            db.Add(storeLaptop);
+            if (!db.StoreLaptops.Any())
+            {
+                db.Add(storeLaptop);
+                db.Add(storeLaptop2);
+                db.Add(storeLaptop3);
+                db.Add(storeLaptop4);
+                db.SaveChanges();
+            }
+
+            await db.SaveChangesAsync();
         }
     }
 }

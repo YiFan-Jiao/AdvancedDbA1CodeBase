@@ -6,6 +6,6 @@
         public string StreetName { get; set; }
         public string StreetNumber { get; set; }
         public string Province { get; set; }
-        public HashSet<Laptop> Laptops { get; set; }
+        public ICollection<StoreLaptop> StoreLaptops { get; set; } = new HashSet<StoreLaptop>();
     }
 }

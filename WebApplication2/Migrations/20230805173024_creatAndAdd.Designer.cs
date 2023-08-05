@@ -12,7 +12,7 @@ using WebApplication2.Data;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20230805091416_creatAndAdd")]
+    [Migration("20230805173024_creatAndAdd")]
     partial class creatAndAdd
     {
         /// <inheritdoc />
@@ -62,14 +62,9 @@ namespace WebApplication2.Migrations
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("StoreId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
-
-                    b.HasIndex("StoreId");
 
                     b.ToTable("Laptops");
                 });
@@ -97,6 +92,21 @@ namespace WebApplication2.Migrations
                     b.ToTable("Stores");
                 });
 
+            modelBuilder.Entity("WebApplication2.Models.StoreLaptop", b =>
+                {
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LaptopId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("StoreId", "LaptopId");
+
+                    b.HasIndex("LaptopId");
+
+                    b.ToTable("StoreLaptops");
+                });
+
             modelBuilder.Entity("WebApplication2.Models.Laptop", b =>
                 {
                     b.HasOne("WebApplication2.Models.Brand", "Brand")
@@ -105,11 +115,26 @@ namespace WebApplication2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApplication2.Models.Store", null)
-                        .WithMany("Laptops")
-                        .HasForeignKey("StoreId");
-
                     b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("WebApplication2.Models.StoreLaptop", b =>
+                {
+                    b.HasOne("WebApplication2.Models.Laptop", "Laptop")
+                        .WithMany("StoreLaptops")
+                        .HasForeignKey("LaptopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication2.Models.Store", "Store")
+                        .WithMany("StoreLaptops")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Laptop");
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("WebApplication2.Models.Brand", b =>
@@ -117,9 +142,14 @@ namespace WebApplication2.Migrations
                     b.Navigation("Laptops");
                 });
 
+            modelBuilder.Entity("WebApplication2.Models.Laptop", b =>
+                {
+                    b.Navigation("StoreLaptops");
+                });
+
             modelBuilder.Entity("WebApplication2.Models.Store", b =>
                 {
-                    b.Navigation("Laptops");
+                    b.Navigation("StoreLaptops");
                 });
 #pragma warning restore 612, 618
         }

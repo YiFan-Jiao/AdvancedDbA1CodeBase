@@ -46,8 +46,7 @@ namespace WebApplication2.Migrations
                     QuantityInStock = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Condition = table.Column<int>(type: "int", nullable: false),
-                    BrandId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    BrandId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,11 +57,30 @@ namespace WebApplication2.Migrations
                         principalTable: "Brands",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StoreLaptops",
+                columns: table => new
+                {
+                    StoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LaptopId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoreLaptops", x => new { x.StoreId, x.LaptopId });
                     table.ForeignKey(
-                        name: "FK_Laptops_Stores_StoreId",
+                        name: "FK_StoreLaptops_Laptops_LaptopId",
+                        column: x => x.LaptopId,
+                        principalTable: "Laptops",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StoreLaptops_Stores_StoreId",
                         column: x => x.StoreId,
                         principalTable: "Stores",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -71,22 +89,25 @@ namespace WebApplication2.Migrations
                 column: "BrandId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Laptops_StoreId",
-                table: "Laptops",
-                column: "StoreId");
+                name: "IX_StoreLaptops_LaptopId",
+                table: "StoreLaptops",
+                column: "LaptopId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "StoreLaptops");
+
+            migrationBuilder.DropTable(
                 name: "Laptops");
 
             migrationBuilder.DropTable(
-                name: "Brands");
+                name: "Stores");
 
             migrationBuilder.DropTable(
-                name: "Stores");
+                name: "Brands");
         }
     }
 }
